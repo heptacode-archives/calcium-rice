@@ -3,10 +3,22 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404, render
 from meal.models import Meal
 
-def index(request):
-    latest_meal_list = Meal.objects.all().order_by('-date')[:5]
-    return render(request, 'index.html', {'latest_meal_list': latest_meal_list})
+from django.views.generic.base import TemplateView
 
-def detail(request):
-    latest_meal_list = Meal.objects.all().order_by('-date')[:5]
-    return render(request, 'detail.html', {'latest_meal_list': latest_meal_list})
+class IndexView(TemplateView):
+    model = Meal
+    template_name = 'index.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['app_list'] = ['meal', ]
+        return context
+
+class DetailView(TemplateView):
+    model = Meal
+    template_name = 'detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['app_list'] = ['meal', ]
+        return context

@@ -1,8 +1,7 @@
 from django.db import models
 
-# Create your models here.
 class Meal(models.Model):
-    date = models.DateField()
+    date = models.DateField(primary_key=True)
     meal = models.CharField(max_length=200)
     allergyCodes = models.CharField(max_length=200)
     allergicFoods = models.CharField(max_length=200)
