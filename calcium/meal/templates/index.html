@@ -53,19 +53,25 @@ var todayMenu = document.getElementById("todayMenuList");
 var tomorrowMenu = document.getElementById("tomorrowMenuList");
 
 axios.get("https://circlesapp.kr/meal/").then(res => {
-    let data = res.data[1];
-    if (data.meal === undefined) {
+    let data = res.data[0];
+    if (data.meal === undefined) { // 어제 급식
+        yesterdayMenu.innerText = "급식이 없습니다."
+        return;
+    }
+    data.meal.split(/,|<br>/).forEach(e => yesterdayMenu.innerHTML += `<li>${e}</li>`);
+
+    data = res.data[1];
+    if (data.meal === undefined) { // 오늘 급식
         todayMenu.innerText = "급식이 없습니다."
         return;
     }
     data.meal.split(/,|<br>/).forEach(e => todayMenu.innerHTML += `<li>${e}</li>`);
 
-
-    data = res.data[0];
-    if (data.meal === undefined) {
-        yesterdayMenu.innerText = "급식이 없습니다."
+    data = res.data[2];
+    if (data.meal === undefined) { // 내일 급식
+        tomorrowMenu.innerText = "급식이 없습니다."
         return;
     }
-    data.meal.split(/,|<br>/).forEach(e => yesterdayMenu.innerHTML += `<li>${e}</li>`);
+    data.meal.split(/,|<br>/).forEach(e => tomorrowMenu.innerHTML += `<li>${e}</li>`);
 })</script>
 {% endblock %}
