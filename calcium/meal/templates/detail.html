@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    #calendar {
+    width: 60vw;
+    box-shadow: 0px 0px 2px 2px #dddddd;
+    margin: 10vw auto 0 auto;
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.row:first-child {
+    background-color: #36afff;
+    color: white;
+}
+
+.item {
+    padding: 1vw;
+    width: 2vw;
+    text-align: center;
+}
+
+#dialogWrapper {
+    position: fixed;
+    background-color: #333333cc;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+#dialog {
+    position: relative;
+    left: 25vw;
+    top: 25vh;
+    width: 50vw;
+    height: 50vh;
+    background-color: white;
+    padding: 2vw;
+}
+
+#closeButton {
+    position: absolute;
+    top: 0.5vw;
+    right: 0.5vw;
+    width: 2vw;
+    height: 2vw;
+    background-color: red;
+    color: white;
+    border-radius: 1vw;
+}</style>
+{% endblock %}
+{% block section %}
+<div id="calendar">
+            <div class="row">
+                <div class="item">일</div>
+                <div class="item">월</div>
+                <div class="item">화</div>
+                <div class="item">수</div>
+                <div class="item">목</div>
+                <div class="item">금</div>
+                <div class="item">토</div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+            <div class="row">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div>
+{% endblock %}    
+{% block script %}
+    <div id="dialogWrapper">
+        <div id="dialog">
+            <div id="closeButton">
+            </div>
+            <h2 id="day"></h2>
+            <ul id ="concon">
+                로딩중
+            </ul>
+            <img style="display: block" id="image">
+        </div>
+    </div>
+    <script>
+    var dialogWrapper = document.getElementById("dialogWrapper");
+dialogWrapper.style.display = "none";
+var calenderItems = document.getElementsByClassName("item");
+var closeButton = document.getElementById("closeButton");
+var concon = document.getElementById("concon");
+var image = document.getElementById("image");
+var day = document.getElementById("day");
+
+function clickevent(number) {
+    day.innerText = `2019-${zeroFill(new Date().getMonth() + 1)}-${zeroFill(number-new Date(new Date().getFullYear(), new Date().getMonth()).getDay() - 6)}`;
+    axios.get("https://circlesapp.kr/meal/monthly").then(res => {
+        concon.innerText = "no meal"
+        console.log(`2019-${zeroFill(new Date().getMonth() + 1)}-${zeroFill(number-new Date(new Date().getFullYear(), new Date().getMonth()).getDay() - 6)}`)
+        let data = res.data[`2019-${zeroFill(new Date().getMonth() + 1)}-${zeroFill(number-new Date(new Date().getFullYear(), new Date().getMonth()).getDay() - 6)}`];
+        if (data === undefined)
+            return;
+        concon.innerText = ""
+        data.meal.split(/,|<br>/).forEach(e => concon.innerHTML += `<li>${e}</li>`);
+        if (data.img != null)
+            image.src = data.img;
+        else
+            image.src = "http://aaastriping.ca/wp-content/uploads/2017/01/temp-image-300x224.jpg"
+    })
+    dialogWrapper.style.display = "block";
+}
+
+function close(v) {
+    dialogWrapper.style.display = "none";
+}
+
+closeButton.addEventListener('click', close);
+
+for(let i=new Date(new Date().getFullYear(), new Date().getMonth()).getDay() + 7; i<38 + new Date(new Date().getFullYear(), new Date().getMonth()).getDay(); i++) {
+    calenderItems[i].innerHTML = i-new Date(new Date().getFullYear(), new Date().getMonth()).getDay() - 6;
+    calenderItems[i].addEventListener('click', _ => clickevent(i));
+}
+
+function zeroFill(number) {
+    if (number < 10) {
+        return '0'+number;
+    }
+    return number;
+}</script>
+
+{% endblock %}

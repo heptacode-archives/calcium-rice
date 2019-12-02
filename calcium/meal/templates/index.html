@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    section {
+    width: 70vw;
+    display: flex;
+    justify-content: space-around;
+    margin: 5vw auto 0 auto;
+}
+
+.menu {
+    min-width: 20vw;
+    box-shadow: 0px 0px 2px 2px #dddddd;
+    height: 20vw;
+    padding-top: 1vw;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+}
+
+.list {
+
+}
+
+.list > li {
+    margin: 0.5vw 0;
+}</style>
+{% endblock %}
+{% block section %}
+<div class="menu" id="yesterdayMenu">
+            <h2>어제의 급식</h2>
+            <ul id="yesterdayMenuList">
+            </ul>
+            
+        </div>
+        <div class="menu" id="todayMenu">
+            <h2>오늘의 급식</h2>
+            <ul id="todayMenuList">
+            </ul>
+        </div>
+        <div class="menu" id="tomorrowMenu">
+            <h2>내일의 급식</h2>
+            <ul id="tomorrowMenuList">
+            </ul>
+        </div>
+        {% endblock %}
+{% block script %}
+<script>
+    var yesterdayMenu = document.getElementById("yesterdayMenuList");
+var todayMenu = document.getElementById("todayMenuList");
+var tomorrowMenu = document.getElementById("tomorrowMenuList");
+
+axios.get("https://circlesapp.kr/meal/").then(res => {
+    let data = res.data[1];
+    if (data.meal === undefined) {
+        todayMenu.innerText = "급식이 없습니다."
+        return;
+    }
+    data.meal.split(/,|<br>/).forEach(e => todayMenu.innerHTML += `<li>${e}</li>`);
+
+
+    data = res.data[0];
+    if (data.meal === undefined) {
+        yesterdayMenu.innerText = "급식이 없습니다."
+        return;
+    }
+    data.meal.split(/,|<br>/).forEach(e => yesterdayMenu.innerHTML += `<li>${e}</li>`);
+})</script>
+{% endblock %}
