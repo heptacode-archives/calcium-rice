@@ -1,6 +1,3 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.shortcuts import get_object_or_404, render
 from meal.models import Meal
 
 from django.views.generic.base import TemplateView
@@ -11,7 +8,7 @@ class IndexView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['app_list'] = ['meal', ]
+        context['meal'] = ['meal', ]
         return context
 
 class DetailView(TemplateView):
@@ -20,5 +17,5 @@ class DetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['app_list'] = ['meal', ]
+        context['meal'] = ['meal', ]
         return context

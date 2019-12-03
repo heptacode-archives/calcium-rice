@@ -5,7 +5,7 @@ class Meal(models.Model):
     meal = models.CharField(max_length=200)
     allergyCodes = models.CharField(max_length=200)
     allergicFoods = models.CharField(max_length=200)
-    img = models.URLField()
+    img = models.URLField(),
 
     def __str__(self):
         return self.date
